@@ -1,0 +1,17 @@
+{
+  "name": "backendsuivisportif",
+  "version": "1.0.0",
+  "description": "Notre application est dédiée au suivi sportif indivduel. Elle permet aux utilisateurs d’enregistrer, consulter et analyser leurs séances d’entraînement de manière simple et centralisée.\r Développé avec Node.js, Express et MongoDB Atlas, le projet met l’accent sur la performance, la sécurité et l’évolution future.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "mongodb": "^7.0.0"
+  }
+}
