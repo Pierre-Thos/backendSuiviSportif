@@ -4,12 +4,16 @@ import routes from "./routes/routes.js"
 const app = express();
 app.use(express.json());
 
-app.use("/user", routes);
+app.use("/", routes);
 
 // Connecte la base au démarrage
 (async () => {
     const db = await connect();
-    app.locals.user = db.collection("user");
+    app.locals.db = {
+        user: db.collection("user"),
+        seance: db.collection("seance"),
+        exercice: db.collection("exercice")
+    };
 })();
 
 app.listen(3000, () => {

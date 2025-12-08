@@ -1,0 +1,98 @@
+[
+  {
+    "titre": "Séance Full Body Débutant",
+    "date": "2024-02-10",
+    "difficulte": "Facile",
+    "duree_totale": 45,
+    "exercices": [
+      {
+        "nom": "Pompes",
+        "duree": 10,
+        "repetitions": 12
+      },
+      {
+        "nom": "Squats",
+        "duree": 10,
+        "repetitions": 15
+      },
+      {
+        "nom": "Gainage",
+        "duree": 5,
+        "repetitions": 1
+      }
+    ],
+    "notes": "Bonne séance pour reprendre."
+  },
+  {
+    "titre": "Séance Cardio HIIT",
+    "date": "2024-02-15",
+    "difficulte": "Intermédiaire",
+    "duree_totale": 30,
+    "exercices": [
+      {
+        "nom": "Burpees",
+        "duree": 5,
+        "repetitions": 20
+      },
+      {
+        "nom": "Mountain Climbers",
+        "duree": 5,
+        "repetitions": 30
+      },
+      {
+        "nom": "Sprints",
+        "duree": 10,
+        "repetitions": 5
+      }
+    ],
+    "notes": "Très intense, rythme élevé."
+  },
+  {
+    "titre": "Séance Haut du Corps",
+    "date": "2024-02-20",
+    "difficulte": "Avancé",
+    "duree_totale": 60,
+    "exercices": [
+      {
+        "nom": "Développé couché",
+        "duree": 15,
+        "repetitions": 8
+      },
+      {
+        "nom": "Tractions",
+        "duree": 10,
+        "repetitions": 10
+      },
+      {
+        "nom": "Élévations latérales",
+        "duree": 10,
+        "repetitions": 15
+      }
+    ],
+    "notes": "Bonne congestion, séance intense."
+  },
+  {
+    "titre": "Séance Jambes & Fessiers",
+    "date": "2024-02-25",
+    "difficulte": "Intermédiaire",
+    "duree_totale": 50,
+    "exercices": [
+      {
+        "nom": "Fentes",
+        "duree": 10,
+        "repetitions": 12
+      },
+      {
+        "nom": "Soulevé de terre jambes tendues",
+        "duree": 10,
+        "repetitions": 10
+      },
+      {
+        "nom": "Hip Thrust",
+        "duree": 15,
+        "repetitions": 12
+      }
+    ],
+    "notes": "Très bonne séance."
+  }
+]
