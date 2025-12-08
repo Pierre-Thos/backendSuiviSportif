@@ -1,6 +1,8 @@
 import express from "express";
 import { connect } from "./db/mongoClient.js";
 import routes from "./routes/routes.js"
+import seancesroutes from "./routes/seeances.routes.js"
+
 const app = express();
 app.use(express.json());
 
