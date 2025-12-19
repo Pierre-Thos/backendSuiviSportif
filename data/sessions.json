@@ -1,98 +1,114 @@
 [
   {
-    "titre": "Séance Full Body Débutant",
+    "titre": "Séance Push (Pectoraux / Épaules / Triceps)",
     "date": "2024-02-10",
-    "difficulte": "Facile",
-    "duree_totale": 45,
-    "exercices": [
-      {
-        "nom": "Pompes",
-        "duree": 10,
-        "repetitions": 12
-      },
-      {
-        "nom": "Squats",
-        "duree": 10,
-        "repetitions": 15
-      },
-      {
-        "nom": "Gainage",
-        "duree": 5,
-        "repetitions": 1
-      }
-    ],
-    "notes": "Bonne séance pour reprendre."
-  },
-  {
-    "titre": "Séance Cardio HIIT",
-    "date": "2024-02-15",
+    "userId": "user1",
     "difficulte": "Intermédiaire",
-    "duree_totale": 30,
-    "exercices": [
-      {
-        "nom": "Burpees",
-        "duree": 5,
-        "repetitions": 20
-      },
-      {
-        "nom": "Mountain Climbers",
-        "duree": 5,
-        "repetitions": 30
-      },
-      {
-        "nom": "Sprints",
-        "duree": 10,
-        "repetitions": 5
-      }
-    ],
-    "notes": "Très intense, rythme élevé."
-  },
-  {
-    "titre": "Séance Haut du Corps",
-    "date": "2024-02-20",
-    "difficulte": "Avancé",
     "duree_totale": 60,
     "exercices": [
       {
-        "nom": "Développé couché",
-        "duree": 15,
-        "repetitions": 8
+        "nom": "Développé couché barre",
+        "reps": 8,
+        "series": 4,
+        "charge": 80
       },
       {
-        "nom": "Tractions",
-        "duree": 10,
-        "repetitions": 10
+        "nom": "Développé militaire haltères",
+        "reps": 10,
+        "series": 3,
+        "charge": 24
       },
       {
-        "nom": "Élévations latérales",
-        "duree": 10,
-        "repetitions": 15
+        "nom": "Dips lestés",
+        "reps": 8,
+        "series": 3,
+        "charge": 20
       }
     ],
-    "notes": "Bonne congestion, séance intense."
+    "notes": "Bonne force sur le développé couché."
   },
   {
-    "titre": "Séance Jambes & Fessiers",
+    "titre": "Séance Pull (Dos / Biceps)",
+    "date": "2024-02-15",
+    "userId": "user1",
+    "difficulte": "Intermédiaire",
+    "duree_totale": 55,
+    "exercices": [
+      {
+        "nom": "Rowing barre",
+        "reps": 10,
+        "series": 4,
+        "charge": 70
+      },
+      {
+        "nom": "Tractions lestées",
+        "reps": 6,
+        "series": 4,
+        "charge": 15
+      },
+      {
+        "nom": "Curl barre",
+        "reps": 12,
+        "series": 3,
+        "charge": 35
+      }
+    ],
+    "notes": "Bonne congestion du dos."
+  },
+  {
+    "titre": "Séance Jambes",
+    "date": "2024-02-20",
+    "userId": "user2",
+    "difficulte": "Avancé",
+    "duree_totale": 70,
+    "exercices": [
+      {
+        "nom": "Squat barre",
+        "reps": 6,
+        "series": 5,
+        "charge": 120
+      },
+      {
+        "nom": "Soulevé de terre",
+        "reps": 5,
+        "series": 5,
+        "charge": 140
+      },
+      {
+        "nom": "Fentes marchées haltères",
+        "reps": 12,
+        "series": 3,
+        "charge": 30
+      }
+    ],
+    "notes": "Séance très lourde, fatigue élevée."
+  },
+  {
+    "titre": "Séance Épaules & Bras",
     "date": "2024-02-25",
+    "userId": "user2",
     "difficulte": "Intermédiaire",
     "duree_totale": 50,
     "exercices": [
       {
-        "nom": "Fentes",
-        "duree": 10,
-        "repetitions": 12
+        "nom": "Élévations latérales haltères",
+        "reps": 15,
+        "series": 4,
+        "charge": 14
       },
       {
-        "nom": "Soulevé de terre jambes tendues",
-        "duree": 10,
-        "repetitions": 10
+        "nom": "Curl incliné haltères",
+        "reps": 10,
+        "series": 3,
+        "charge": 20
       },
       {
-        "nom": "Hip Thrust",
-        "duree": 15,
-        "repetitions": 12
+        "nom": "Extension triceps barre EZ",
+        "reps": 12,
+        "series": 3,
+        "charge": 40
       }
     ],
-    "notes": "Très bonne séance."
+    "notes": "Volume élevé, bonnes sensations."
   }
 ]

@@ -1,77 +1,58 @@
 import { Router } from "express";
 import { ObjectId } from "mongodb";
-import { connect } from "../db/mongoClient.js";
 
 const router = Router();
 
 // ----------------------
-// Helper : collection measurement
-// ----------------------
-async function getMeasurementCollection(req) {
-  if (!req.app.locals.measurement) {
-    const db = await connect();
-    req.app.locals.measurement = db.collection("measurement");
-  }
-  return req.app.locals.measurement;
-}
-
-// ----------------------
 // POST /measurement
-// Ajouter une mesure physique
+// Ajouter une ou plusieurs mesures physiques
 // ----------------------
 router.post("/measurement", async (req, res) => {
   try {
-    const measurements = await getMeasurementCollection(req);
-    const { userId, weight, bodyFat, waist, date } = req.body;
+    const measurements = req.app.locals.db.measurement;
 
-    if (!userId || weight === undefined || weight === null) {
-      return res
-        .status(400)
-        .json({ error: "userId et weight sont obligatoires" });
-    }
+    const data = Array.isArray(req.body) ? req.body : [req.body];
 
-    const doc = {
-      userId,
-      weight: Number(weight),
-      bodyFat:
-        bodyFat !== undefined && bodyFat !== null ? Number(bodyFat) : null,
-      waist: waist !== undefined && waist !== null ? Number(waist) : null,
-      date: date ? new Date(date) : new Date(),
-    };
+    const docs = data.map(({ userId, weight, bodyFat, waist, date }) => {
+      if (!userId || weight === undefined || weight === null) {
+        throw new Error("userId et weight sont obligatoires");
+      }
 
-    const result = await measurements.insertOne(doc);
-    return res.status(201).json({ ...doc, _id: result.insertedId });
+      return {
+        userId,
+        weight: Number(weight),
+        bodyFat: bodyFat != null ? Number(bodyFat) : null,
+        waist: waist != null ? Number(waist) : null,
+        date: date ? new Date(date) : new Date(),
+      };
+    });
+
+    const result = await measurements.insertMany(docs);
+
+    return res.status(201).json({
+      inserted: result.insertedCount,
+      ids: result.insertedIds,
+    });
   } catch (err) {
     console.error("Erreur POST /measurement", err);
     return res
       .status(500)
-      .json({ error: "Insertion failed", details: String(err) });
+      .json({ error: "Insertion failed", details: String(err.message) });
   }
 });
 
 // ----------------------
 // GET /measurement
 // Liste avec filtres + pagination
-// /measurement?userId=xxx&dateFrom=2025-01-01&dateTo=2025-12-31&page=1&limit=10
 // ----------------------
 router.get("/measurement", async (req, res) => {
   try {
-    const measurements = await getMeasurementCollection(req);
+    const measurements = req.app.locals.db.measurement;
 
-    const {
-      userId,
-      dateFrom,
-      dateTo,
-      page = 1,
-      limit = 10,
-    } = req.query;
+    const { userId, dateFrom, dateTo, page = 1, limit = 10 } = req.query;
 
     const filtre = {};
-
-    if (userId) {
-      filtre.userId = userId;
-    }
-
+    if (userId) filtre.userId = userId;
     if (dateFrom || dateTo) {
       filtre.date = {};
       if (dateFrom) filtre.date.$gte = new Date(dateFrom);
@@ -82,13 +63,12 @@ router.get("/measurement", async (req, res) => {
     const limitNumber = Number(limit);
     const skip = (pageNumber - 1) * limitNumber;
 
-    const cursor = measurements
+    const list = await measurements
       .find(filtre)
       .sort({ date: 1 })
       .skip(skip)
-      .limit(limitNumber);
-
-    const list = await cursor.toArray();
+      .limit(limitNumber)
+      .toArray();
 
     return res.json({
       page: pageNumber,
@@ -110,14 +90,9 @@ router.get("/measurement", async (req, res) => {
 // ----------------------
 router.get("/measurement/:id", async (req, res) => {
   try {
-    let oid;
-    try {
-      oid = new ObjectId(req.params.id);
-    } catch (_) {
-      return res.status(400).json({ error: "Invalid measurement id" });
-    }
+    const oid = new ObjectId(req.params.id);
 
-    const measurements = await getMeasurementCollection(req);
+    const measurements = req.app.locals.db.measurement;
     const doc = await measurements.findOne({ _id: oid });
 
     if (!doc) return res.status(404).json({ error: "Measurement not found" });
@@ -132,34 +107,41 @@ router.get("/measurement/:id", async (req, res) => {
 
 // ----------------------
 // GET /measurement/stats/weight-evolution
-// Stats de poids moyen par mois pour un user
-// /measurement/stats/weight-evolution?userId=xxx
+// Stats de poids moyen par mois (tous utilisateurs)
 // ----------------------
 router.get("/measurement/stats/weight-evolution", async (req, res) => {
   try {
-    const { userId } = req.query;
-    if (!userId) {
-      return res
-        .status(400)
-        .json({ error: "userId est obligatoire" });
-    }
-
-    const measurements = await getMeasurementCollection(req);
+    const measurements = req.app.locals.db.measurement;
 
     const stats = await measurements
       .aggregate([
-        { $match: { userId } },
+        {
+          $addFields: {
+            dateParsed: {
+              $cond: [
+                { $eq: [{ $type: "$date" }, "date"] },
+                "$date",
+                { $toDate: "$date" }
+              ]
+            }
+          }
+        },
+        {
+          $match: {
+            dateParsed: { $ne: null }
+          }
+        },
         {
           $group: {
             _id: {
-              year: { $year: "$date" },
-              month: { $month: "$date" },
+              year: { $year: "$dateParsed" },
+              month: { $month: "$dateParsed" }
             },
             avgWeight: { $avg: "$weight" },
             minWeight: { $min: "$weight" },
             maxWeight: { $max: "$weight" },
-            count: { $sum: 1 },
-          },
+            count: { $sum: 1 }
+          }
         },
         { $sort: { "_id.year": 1, "_id.month": 1 } },
         {
@@ -170,22 +152,20 @@ router.get("/measurement/stats/weight-evolution", async (req, res) => {
             avgWeight: 1,
             minWeight: 1,
             maxWeight: 1,
-            count: 1,
-          },
-        },
+            count: 1
+          }
+        }
       ])
       .toArray();
 
-    return res.json({ userId, evolution: stats });
+    return res.json({ evolution: stats });
   } catch (err) {
-    console.error(
-      "Erreur GET /measurement/stats/weight-evolution",
-      err
-    );
+    console.error("Erreur GET /measurement/stats/weight-evolution", err);
     return res
       .status(500)
       .json({ error: "Aggregation failed", details: String(err) });
   }
 });
+
 
 export default router;

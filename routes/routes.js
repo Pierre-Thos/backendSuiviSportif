@@ -1,20 +1,15 @@
-import express from "express";
 import { Router } from "express";
 import { ObjectId } from "mongodb";
-import { connect } from "../db/mongoClient.js";
-const router = Router();
-const app = express();
-app.use(express.json());
 
 //Dependencies de l'import/export JSON
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+const router = Router();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-let user;
 
 //Route pour récuperer un utilisateur
 router.get("/user", async (req, res) => {
@@ -34,12 +29,10 @@ router.post("/user", async (req, res) => {
 //Route d'aggrégation pour calculer le poids total d'une séance
 router.get("/seance/stats/poids-total", async (req, res) => {
     try {
-        const db = req.app.locals.db.seance;
-        const seance = db.collection("seance");
+        const seance = req.app.locals.db.seance;
 
         const stats = await seance.aggregate([
             { $unwind: "$exercices" },
-
             {
                 $addFields: {
                     poidsExercice: {
@@ -51,7 +44,6 @@ router.get("/seance/stats/poids-total", async (req, res) => {
                     }
                 }
             },
-
             {
                 $group: {
                     _id: "$_id",
@@ -60,7 +52,6 @@ router.get("/seance/stats/poids-total", async (req, res) => {
                     totalPoids: { $sum: "$poidsExercice" }
                 }
             },
-
             { $sort: { totalPoids: -1 } }
         ]).toArray();
 
@@ -74,11 +65,9 @@ router.get("/seance/stats/poids-total", async (req, res) => {
             stats
         });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: "Erreur durant agrégation/export" });
     }
 });
-
 
 //Route pour inserer un fichier JSON dans Atlas
 router.post("/import/json", async (req, res) => {
@@ -114,58 +103,38 @@ router.post("/import/json", async (req, res) => {
         });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erreur import JSON vers Atlas", details: err.message });
-    }
+    console.error("Erreur import JSON vers Atlas :", err);
+    res.status(500).json({ error: err.message || "Erreur durant l'import JSON" });
+}
 });
 
-
-
 // ----------------------
-// Séances (Sessions)
+// Séances (seance)
 // ----------------------
-
-// Helper: obtenir/initialiser la collection `session` sur app.locals
-async function getSessionCollection(req) {
-  if (!req.app.locals.session) {
-    const db = await connect();
-    req.app.locals.session = db.collection("session");
-  }
-  return req.app.locals.session;
-}
 
 // Route POST pour insérer une séance
-router.post("/session", async (req, res) => {
-  try {
-    const sessions = await getSessionCollection(req);
-    const doc = req.body;
-    const result = await sessions.insertOne(doc);
-    return res.status(201).json({ ...doc, _id: result.insertedId });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Insertion failed", details: String(err) });
-  }
+router.post("/seance", async (req, res) => {
+    try {
+        const seance = req.app.locals.db.seance;
+        const doc = req.body;
+        const result = await seance.insertOne(doc);
+        res.status(201).json({ ...doc, _id: result.insertedId });
+    } catch (err) {
+        res.status(500).json({ error: "Insertion failed" });
+    }
 });
 
 // Route GET pour récupérer une séance par id
-router.get("/session/:id", async (req, res) => {
-  try {
-    let oid;
+router.get("/seance/:id", async (req, res) => {
     try {
-      oid = new ObjectId(req.params.id);
-    } catch (_) {
-      return res.status(400).json({ error: "Invalid session id" });
+        const oid = new ObjectId(req.params.id);
+        const seance = req.app.locals.db.seance;
+        const doc = await seance.findOne({ _id: oid });
+        if (!doc) return res.status(404).json({ error: "Session not found" });
+        res.json(doc);
+    } catch (err) {
+        res.status(500).json({ error: "Fetch failed" });
     }
-
-    const sessions = await getSessionCollection(req);
-    const doc = await sessions.findOne({ _id: oid });
-    if (!doc) return res.status(404).json({ error: "Session not found" });
-    return res.json(doc);
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Fetch failed", details: String(err) });
-  }
 });
+
 export default router;

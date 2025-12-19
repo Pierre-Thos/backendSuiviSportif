@@ -1,14 +1,10 @@
-import express from "express";
-import { Router } from "express";
-
+import { Router } from "express"; 
 const router = Router();
 
-
 //  Ajouter un exercice
-
-router.post("/", async (req, res) => {
+router.post("/exercice", async (req, res) => {
     try {
-        const exercises = req.app.locals.exercises;   // collection
+        const exercises = req.app.locals.db.exercice;   // collection
         const doc = req.body;
 
         const result = await exercises.insertOne(doc);
@@ -19,13 +15,10 @@ router.post("/", async (req, res) => {
     }
 });
 
-
-
 //  Liste filtrée + pagination
-
-router.get("/", async (req, res) => {
+router.get("/exercice", async (req, res) => {
     try {
-        const exercises = req.app.locals.exercises;
+        const exercises = req.app.locals.db.exercice;
 
         const {
             muscleGroup,
@@ -56,39 +49,18 @@ router.get("/", async (req, res) => {
     }
 });
 
-
-
-//   Aggregation + lookup avec WorkoutSession
-
-router.get("/stats/top-muscle-groups", async (req, res) => {
+router.get("/exercice/stats/top-muscle-groups", async (req, res) => {
     try {
-        const exercises = req.app.locals.exercises;
-        const session = req.app.locals.workoutSessions;
+        const exercises = req.app.locals.db.exercice;
 
         const pipeline = [
-          
-            // Jointure entre WorkoutSession.exercisesIds et Exercises._id
-            {
-                $lookup: {
-                    from: "workoutSessions",
-                    localField: "_id",
-                    foreignField: "exercisesIds",
-                    as: "usedInSessions"
-                }
-            },
-            // Filtrer uniquement les exercices utilisés
-            { $match: { usedInSessions: { $ne: [] } } },
-
-            // Regrouper par muscleGroup
             {
                 $group: {
                     _id: "$muscleGroup",
-                    usageCount: { $sum: 1 }
+                    count: { $sum: 1 }   // Compte le nombre d'exercices par groupe musculaire
                 }
             },
-
-            // Trier les groupes musculaires les plus utilisés
-            { $sort: { usageCount: -1 } }
+            { $sort: { count: -1 } }  // Trie par nombre décroissant
         ];
 
         const stats = await exercises.aggregate(pipeline).toArray();
@@ -98,6 +70,5 @@ router.get("/stats/top-muscle-groups", async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-
 
 export default router;

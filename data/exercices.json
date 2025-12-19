@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Développé couché",
+    "type": "force",
+    "muscleGroup": "pectoraux",
+    "difficulty": 3
+  },
+  {
+    "name": "Squat",
+    "type": "force",
+    "muscleGroup": "jambes",
+    "difficulty": 4
+  },
+  {
+    "name": "Tractions",
+    "type": "force",
+    "muscleGroup": "dos",
+    "difficulty": 4
+  },
+  {
+    "name": "Crunch",
+    "type": "abdos",
+    "muscleGroup": "abdominaux",
+    "difficulty": 2
+  },
+  {
+    "name": "Planche",
+    "type": "abdos",
+    "muscleGroup": "abdominaux",
+    "difficulty": 3
+  },
+  {
+    "name": "Fentes",
+    "type": "force",
+    "muscleGroup": "jambes",
+    "difficulty": 3
+  }
+]

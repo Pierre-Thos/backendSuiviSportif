@@ -1,0 +1,37 @@
+[
+  {
+    "userId": "user1",
+    "weight": 72.5,
+    "bodyFat": 18.2,
+    "waist": 82,
+    "date": "2025-12-01T08:30:00Z"
+  },
+  {
+    "userId": "user1",
+    "weight": 73.0,
+    "bodyFat": 17.9,
+    "waist": 81,
+    "date": "2025-12-15T08:30:00Z"
+  },
+  {
+    "userId": "user2",
+    "weight": 85.0,
+    "bodyFat": 22.5,
+    "waist": 90,
+    "date": "2025-12-03T09:00:00Z"
+  },
+  {
+    "userId": "user2",
+    "weight": 84.5,
+    "bodyFat": 22.0,
+    "waist": 89,
+    "date": "2025-12-17T09:00:00Z"
+  },
+  {
+    "userId": "user3",
+    "weight": 65.0,
+    "bodyFat": 15.0,
+    "waist": 75,
+    "date": "2025-12-05T07:45:00Z"
+  }
+]
