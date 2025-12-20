@@ -111,3 +111,86 @@ curl -X POST http://localhost:3000/import/json \
   "collection": "seance"
 }
 ```
+
+
+# Instructions d'installation
+## Ce projet nécessite l'installation de Node.js et un accès à une base de données MongoDB.
+
+## A. Installation de Node.js
+
+L'API nécessite Node.js (version 18.x ou supérieure recommandée).
+
+### 1. Téléchargement
+
+#### Windows & macOS : Rendez-vous sur nodejs.org et téléchargez la version LTS (Long Term Support). Lancez l'installateur et suivez les instructions par défaut.
+
+#### Linux (Ubuntu/Debian) :
+
+```Bash
+sudo apt update
+sudo apt install nodejs npm
+```
+### 2. Vérification
+
+#### Une fois installé, ouvrez un terminal et vérifiez les versions :
+
+```Bash
+node -v
+npm -v
+B. Installation et Configuration du Projet
+```
+
+## B. Installation et Configuration du Projet
+
+### 1. Cloner le projet
+
+#### Récupérez les fichiers depuis le dépôt distant :
+
+```Bash
+git clone <URL_DE_VOTRE_DEPOT_GITHUB>
+cd <NOM_DU_DOSSIER_PROJET>
+```
+
+### 2. Installer les dépendances
+
+#### Utilisez NPM pour installer Express, Mongoose, ValidatorJS et les autres bibliothèques nécessaires :
+
+```Bash
+npm install
+```
+
+### 3. Configuration des variables d'environnement
+
+#### Le projet utilise un fichier .env pour sécuriser les accès. Créez un fichier nommé .env à la racine du projet :
+
+#### Extrait de code
+PORT=3000
+MONGODB_URI=mongodb+srv://<votre_utilisateur>:<votre_mot_de_passe>@cluster.mongodb.net/suivi-sportif
+#### 
+
+### 4. Import initial des données (Data Seed)
+
+#### Pour peupler votre base de données avec le catalogue d'exercices par défaut (fichier JSON dans /data) :
+
+Lancez le projet (voir étape suivante).
+
+
+Utilisez un outil comme Postman pour appeler la route d'importation : POST http://localhost:3000/api/exercises/import
+#### 
+
+### C. Lancement de l'application
+
+#### Pour démarrer le serveur en mode développement ou production :
+
+#### Mode Standard :
+
+```Bash
+npm start
+```
+
+#### Mode Développement (avec redémarrage automatique via Nodemon) :
+
+```Bash
+npm run dev
+```
+#### L'API sera accessible par défaut à l'adresse : http://localhost:3000
